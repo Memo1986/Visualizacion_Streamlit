@@ -150,7 +150,7 @@ cantidad = len(filtro_especie)
 # st.header("Cantidad de observaciones ", cantidad)
 # st.header("Cantidad de observaciones 0", len(filtro_especie))
 st.subheader("st.dataframe()")
-st.dataframe(registros_presencia_1[['scientificName',"decimalLatitude", 
+st.dataframe(registros_presencia_1[['scientificName',"decimalLatitude",  
                               "decimalLongitude", 'eventDate','country']].rename(
     columns= {'scientificName': "Nombre Científico", "decimalLatitude": "Latitud",
               "decimalLongitude": "Longitud",

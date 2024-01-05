@@ -29,7 +29,7 @@ from streamlit_folium import folium_static
 ## Importar pandas
 import streamlit as st
 
-st.title("Ejemplo de aplicación Streamlit")
+st.title("Ejemplo de aplicación en Streamlit")
 
 #
 # Título y descripción de la aplicación

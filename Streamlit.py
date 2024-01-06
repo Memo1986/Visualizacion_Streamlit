@@ -6,8 +6,8 @@
 import pandas as pd 
 import geopandas as gpd
 import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt # biblioteca de graficación
+# import matplotlib
+# import matplotlib.pyplot as plt # biblioteca de graficación
 ## import calendar # biblioteca para manejo de fechas
 import os
 import requests

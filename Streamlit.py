@@ -12,10 +12,10 @@ import os
 import requests
 import zipfile
 # import contextily as cx
-from geojson import dump
+# from geojson import dump
 # from owslib.wfs import WebFeatureService
 # from mpl_toolkits.axes_grid1 import make_axes_locatable
-import descartes
+# import descartes
 import folium
 from folium import Marker
 import math

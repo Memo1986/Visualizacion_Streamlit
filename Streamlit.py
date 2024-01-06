@@ -24,8 +24,8 @@ from folium import Marker
 from folium.plugins import MarkerCluster
 from folium.plugins import HeatMap
 from streamlit_folium import folium_static
-import matplotlib
-import matplotlib.pyplot as plt # biblioteca de graficación
+#import matplotlib
+# import matplotlib.pyplot as plt # biblioteca de graficación
 
 
 

@@ -63,7 +63,7 @@ if registros is not None:
 
 
 # Cargar los polígonos del continente Americano
-ame = gpd.read_file("C:/Users/Memo/Desktop/PF-3311/Clase_06/Datos/America.shp")
+ame = gpd.read_file("C:/Users/Memo/Desktop/PF-3311/Clase_07/Visualizacion_Streamlit/Datos/America.shp")
 
 
 # Limpieza de datos

@@ -6,9 +6,7 @@
 import pandas as pd 
 import geopandas as gpd
 import numpy as np
-# import matplotlib
-# import matplotlib.pyplot as plt # biblioteca de graficación
-## import calendar # biblioteca para manejo de fechas
+import calendar # biblioteca para manejo de fechas
 import os
 import requests
 import zipfile
@@ -25,6 +23,9 @@ from folium import Marker
 from folium.plugins import MarkerCluster
 from folium.plugins import HeatMap
 from streamlit_folium import folium_static
+import matplotlib
+import matplotlib.pyplot as plt # biblioteca de graficación
+
 
 ## Importar pandas
 import streamlit as st

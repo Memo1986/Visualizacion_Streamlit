@@ -1,7 +1,7 @@
 pandas
 geopandas
 numpy
-matplotlib 
+matplotlib == 23.3.2
 calendar
 os
 requests

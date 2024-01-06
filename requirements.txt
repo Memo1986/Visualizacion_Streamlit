@@ -1,16 +1,5 @@
-pandas
+plotly
+pygeos
 geopandas
-numpy
-matplotlib == 23.3.2
-calendar
-os
-requests
-zipfile
-contextily
-geojson
-owslib.wfs
-mpl_toolkits.axes_grid1
-descartes
 folium
-math
-plotly.express
+streamlit-folium

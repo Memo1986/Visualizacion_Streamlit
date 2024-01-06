@@ -1,8 +1,7 @@
 pandas
 geopandas
 numpy
-matplotlib
-matplotlib.pyplot
+matplotlib 
 calendar
 os
 requests

@@ -3,7 +3,7 @@
 # Fecha de creación: 04-01-2024
 
 ## Importar pandas
-import pandas as pd
+import pandas as pd 
 import geopandas as gpd
 import numpy as np
 import matplotlib

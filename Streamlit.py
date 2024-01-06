@@ -48,16 +48,16 @@ st.markdown("La aplicación mostrará un conjunto de salidas en forma de tablas,
 
 # Cargar los datos
 st.header("Cargar los datos")
-registros = st.file_uploader("Seleccione el archivo .CSV, que contiene las observaciones de triatomine americano")
+registros_arriba = st.file_uploader("Seleccione el archivo .CSV, que contiene las observaciones de triatomine americano")
 
 
 # Se continua con precesamiento de los datos solo si hya un archivo de datos cargado
-if registros is not None:
+if registros_arriba is not None:
     # Cargar de registro de presencia de triatomine americano en un data frame
-    registros = pd.read_csv(registros)
+    registros = pd.read_csv(registros_arriba)
     # Conversión del data frame de presencia a geodataframe
-    registros_presencia_0 = gpd.GeoDataFrame(registros, 
-                                            geometry = gpd.points_from_xy(registros.decimalLongitude,
+    registros_presencia = gpd.GeoDataFrame(registros,
+                                           geometry = gpd.points_from_xy(registros.decimalLongitude,
                                                                          registros.decimalLatitude),
                                                                          crs = "EPSG:4326")
 
@@ -69,9 +69,16 @@ ame = gpd.read_file("C:/Users/Memo/Desktop/PF-3311/Clase_07/Visualizacion_Stream
 
 # Limpieza de datos
 # Eliminación de registros con valores nulos en la columna "scientificName"
-registros_0 = registros_presencia_0[registros_presencia_0["scientificName"].notna()]
+registros_presencia = registros_presencia[registros_presencia["scientificName"].notna()]
+# Eliminación de registros con valores nulos en la columna "scientificName"
+registros_fecha = registros_presencia[registros_presencia["year"].notna()]
+registros_fecha.year = registros_fecha.year.astype("int")
+registros_fecha["Year_01"] = registros_fecha.year.astype("str")
+# reg_fecha = registros_fecha[["id",'scientificName',"decimalLatitude", 
+#                               "decimalLongitude", "collectionCode",'eventDate', 'year', 'month','country', "ID_Serie","Year_01"]]
+# registros_fecha["year"] = pd.to_datetime[registros_fecha["year"]]
 # Eliminar las coordenadas repetidas
-datos_00 = registros_0.drop_duplicates(['decimalLatitude', 'decimalLongitude'], keep='last')
+datos_00 = registros_fecha.drop_duplicates(['decimalLatitude', 'decimalLongitude'], keep='last')
 # Despliegue de las columnas con el nombre científico, la especie, la fecha, el año, el mes y el día
 datos_01 = datos_00[["id",'scientificName',"decimalLatitude", 
                               "decimalLongitude", "collectionCode",'eventDate', 'year', 'month','country', "ID_Serie"]]
@@ -92,41 +99,48 @@ lista_pais.sort()
 filtro_pais = st.selectbox("Seleccione un pais", lista_pais)	
 
 
-
+st.header("Filtros por Año")
+# Listas
+lista_year = registros_fecha.Year_01.unique().tolist()
+lista_year.sort()
+filtro_year = st.selectbox("Seleccione un año", lista_year)	
 
 # Procesamiento
 
 # Filtrado
-registros_presencia_1 = registros_presencia_0[registros_presencia_0["scientificName"] == filtro_especie]
+registros_presencia_0 = registros_fecha[registros_fecha["scientificName"] == filtro_especie]
 # Union espacial de las depas de America y registros de presencia
-ame_registros = ame.sjoin(registros_presencia_1, how = "left", predicate = "contains")
+ame_registros = ame.sjoin(registros_presencia_0, how = "left", predicate = "contains")
 # Conteo de resgistros de presencia en cada pais
 ame_reg_count = ame_registros.groupby("country").agg(cantidad_registros = ("scientificName", "count"))
 ame_reg_count = ame_reg_count.reset_index()
 
-registros_presencia_2 = registros_presencia_0[registros_presencia_0["country"] == filtro_pais]
+registros_presencia_1 = registros_presencia[registros_presencia["country"] == filtro_pais]
 # Union espacial de las depas de America y registros de presencia
-ame_reg_pais = ame.sjoin(registros_presencia_2, how = "left", predicate = "contains")
+ame_reg_pais = ame.sjoin(registros_presencia_1, how = "left", predicate = "contains")
 # Conteo de resgistros de presencia en cada pais
 ame_reg_pais= ame_reg_pais.groupby("country").agg(cantidad_registros = ("scientificName", "count"))
 ame_reg_pais = ame_reg_pais.reset_index()
 
-
+registros_presencia_2 = registros_fecha[registros_fecha["Year_01"] == filtro_year]
 # Cambio de fecha
 # Remplazar los NaN por la cadena string de 1000
-# fecha = datos_01.year.fillna('1000', inplace = True) 
-# # Seleccionar de la columna year los ultimos 4 caracteres y agregarlo a la nueva columna de Year_0
+# fecha = datos_01[datos_01["year"].notna()]
+# # fecha = fecha.year.fillna('1000', inplace = True) 
+# # # Seleccionar de la columna year los ultimos 4 caracteres y agregarlo a la nueva columna de Year_0
 # fecha["Year_0"] = fecha["year"].str[-4:]
-# # Remplazar los NaN por 1000
+# # # Remplazar los NaN por 1000
 # fecha.Year_0.fillna('1000', inplace = True) 
-# # Cambiar el tipo de a columna de Year_0 (object) a int
-# fecha.Year_0 = fecha.Year_0.astype("int")
-# # Seleccionar los datos mayotes a 1000
+# # # Cambiar el tipo de a columna de Year_0 (object) a int
+# #fecha.Year_0 = fecha.Year_0.astype("int")
+# # # Seleccionar los datos mayotes a 1000
 # fecha_0 = fecha[fecha["Year_0"] > 1000]
-# # Agrupar los datos por año
+# # # Agrupar los datos por año
 # fecha_01 = fecha_0.groupby('Year_0').count()
-# # Agregarle un índice al nuevo dataframe
+# # # Agregarle un índice al nuevo dataframe
 # fecha_01 = fecha_01.reset_index()
+# # 
+# # fecha_0.Year_0 = fecha_0.Year_0.astype("str")
 
 
 # Cambio del tipo de datos del campo fecha
@@ -152,19 +166,42 @@ cantidad = len(filtro_especie)
 # st.header("Cantidad de observaciones ", cantidad)
 # st.header("Cantidad de observaciones 0", len(filtro_especie))
 st.subheader("st.dataframe()")
-st.dataframe(registros_presencia_1[['scientificName',"decimalLatitude",  
+st.dataframe(registros_presencia_0[['scientificName',"decimalLatitude",  
                               "decimalLongitude", 'eventDate','country']].rename(
     columns= {'scientificName': "Nombre Científico", "decimalLatitude": "Latitud",
               "decimalLongitude": "Longitud",
               'eventDate': "Fecha", "country": "Pais"}))
-
+st.write("Cantidad total de observaciones de ", filtro_especie, "es = ", len(registros_presencia_0))
 
 # Tabla de registros por pais
-st.header("Tabla de registros de presencia por pais " + filtro_pais)
+st.header("Tabla de registros de presencia en " + filtro_pais)
 st.subheader("st.dataframe()")
-st.dataframe(registros_presencia_2[['scientificName', "decimalLatitude",  "decimalLongitude", 'country']].rename(
+st.dataframe(registros_presencia_1[['scientificName', "decimalLatitude",  "decimalLongitude", 'country']].rename(
     columns= {'scientificName': "Nombre Científico", "decimalLatitude": "Latitud","decimalLongitude": "Longitud",
               "country": "Pais"}))
+st.write("Cantidad total de observaciones de triatomine americano en ", filtro_pais, "es = ", len(registros_presencia_1))
+
+
+st.header("Tabla de registros de triatomine americano en " + filtro_year)
+st.subheader("st.dataframe()")
+st.dataframe(registros_presencia_2[['scientificName', "decimalLatitude",  "decimalLongitude", 'country', "Year_01"]].rename(
+    columns= {'scientificName': "Nombre Científico", "decimalLatitude": "Latitud","decimalLongitude": "Longitud",
+              "Year_01": "Fecha", "country": "Pais"}))
+
+
+# Tabla de registros por year
+# st.header("Tabla de registros de presencia por año " + str(filtro_year))
+# # st.header("Cantidad de observaciones ", cantidad)
+# # st.header("Cantidad de observaciones 0", len(filtro_especie))
+# st.subheader("st.dataframe()")
+# st.dataframe(registros_presencia_1[['scientificName',"decimalLatitude",  
+#                               "decimalLongitude", 'Year_0','country']].rename(
+#     columns= {'scientificName': "Nombre Científico", "decimalLatitude": "Latitud",
+#               "decimalLongitude": "Longitud",
+#               'Year_0': "Year", "country": "Pais"}))
+
+
+
 
 # Datos espaciales
 # Convertir a GeoDataFrame
@@ -174,8 +211,26 @@ st.dataframe(registros_presencia_2[['scientificName', "decimalLatitude",  "decim
 # triatoma_interc = triatoma_0.overlay(ame, how="intersection")
 
 
+# Graficos de tiempo
+st.header("Gráfico de presencia de triatomine americano por año " + filtro_especie)
+datatri_07 = registros_presencia_0.loc[:, ['scientificName', "Year_01"]]
+datatri_07
+pres_year = pd.DataFrame(datatri_07.groupby(datatri_07["Year_01"]).count())
+# pres_year.columns = ["Observacion_Anual"]
+st.subheader("st.bar_chart()")
+st.bar_chart(pres_year)
 
+#PLotear
+st.subheader("px.bar()")
+fig = px.bar(pres_year,
+             labels = {"Year_01": "Año", "value":"Registros de presencia"},
+             title = "Historial de resgistros de presencia por año de " + filtro_especie )
+st.plotly_chart(fig)
 
+ 
+# Graficos de tpais
+st.header("Gráfico de presencia de triatomine americano por Pais " + filtro_especie)
+st.write(ame_reg_pais)
 
 
 

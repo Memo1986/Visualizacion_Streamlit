@@ -3,6 +3,7 @@
 # Fecha de creación: 04-01-2024
 
 ## Importar pandas
+import streamlit as st
 import pandas as pd 
 import geopandas as gpd
 import numpy as np
@@ -27,8 +28,7 @@ import matplotlib
 import matplotlib.pyplot as plt # biblioteca de graficación
 
 
-## Importar pandas
-import streamlit as st
+
 
 st.title("Ejemplo de aplicación en Streamlit")
 

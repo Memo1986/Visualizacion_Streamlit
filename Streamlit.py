@@ -11,7 +11,7 @@ import calendar # biblioteca para manejo de fechas
 import os
 import requests
 import zipfile
-import contextily as cx
+# import contextily as cx
 from geojson import dump
 from owslib.wfs import WebFeatureService
 from mpl_toolkits.axes_grid1 import make_axes_locatable
